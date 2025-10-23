@@ -28,8 +28,9 @@ namespace FirstWebApp.Models.Services.Application
 
         public CourseDetailViewModel GetCourse(string id)
         {
-            string query = "SELECT Id, Title, Description, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses WHERE Id=" + id +
-                "; SELECT Id, Title, Description, Duration FROM Lessons WHERE CourseId=" + id;
+            //@ definisce una stringa su + righe
+            string query = $@"SELECT Id, Title, Description, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses WHERE Id={id};
+            SELECT Id, Title, Description, Duration FROM Lessons WHERE CourseId={id}";
 
             DataSet dataSet = db.Query(query);
 
