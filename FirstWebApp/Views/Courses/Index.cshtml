@@ -1,0 +1,39 @@
+﻿@model List<CourseViewModel>
+
+<h1 class="my-4">@ViewData["Title"]</h1>
+
+<div class="list-group">
+    @foreach(CourseViewModel course in Model)
+    {
+        <div class="row list-group-item d-flex align-items-center">
+            <div class="col-md-1">
+                <img src="@course.ImagePath" width="50" />
+            </div>
+            <div class="col-md-5">
+                <h2 class="text-primary">@course.Title</h2>
+                <author class="text-secondary">di @course.Author</author>
+            </div>
+            <div class="col-md-2" title="@course.Rating">
+                @for(int i = 0; i <=5; i++)
+                {
+                    if(course.Rating >= i)
+                    {
+                        <i class="bi bi-star-fill text-warning"></i>
+                    } else {
+                        <i class="bi bi-star-fill"></i>
+                    }
+                }
+            </div>
+            <div class="col-md-2">
+                 @course.CurrentPrice <br /> 
+                @if(!course.CurrentPrice.Equals(course.FullPrice))
+                {
+                    <s class="text-secondary">@course.FullPrice</s>
+                }
+            </div>
+            <div class="col-md-2">
+                <a asp-action="Details" asp-controller="Courses" asp-route-id="@course.Id" class="btn btn-outline-primary">Dettagli Corso @course.Id</a>
+            </div>
+        </div>
+    }
+</div>

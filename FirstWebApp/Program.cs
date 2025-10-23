@@ -1,4 +1,11 @@
+using FirstWebApp.Models.Services.Application;
+using FirstWebApp.Models.Services.Infrastructure;
+
+// Add CourseService to the DI container
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddTransient<ICourseService, AdoNetCourseService>();
+builder.Services.AddTransient<IDatabaseAccessor, SqlServerAccessor>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -14,12 +21,23 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+// Middleware to serve static files that are in the wwwroot folder
 app.UseStaticFiles();
 
 app.UseRouting();
 
 app.UseAuthorization();
 
+// Map controller route for CoursesController
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}"
+);
+
+//Forma Abbreviata di router di defualt
+//app.MapDefaultControllerRoute();
+
 app.MapRazorPages();
 
 app.Run();
+ 

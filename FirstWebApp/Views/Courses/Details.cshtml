@@ -1,0 +1,72 @@
+﻿@model CourseDetailViewModel
+
+<section class="course-info">
+    <div class="row">
+        <div class="col-md-9">
+            <h1>@Model.Title</h1>
+        </div>
+        <div class="col-md-3 d-flex align-items-center">
+            <a class="btn btn-warning">Iscriviti</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            <p>
+                @Model.Description
+            </p> 
+        </div>
+        <div class="col-md-3">
+            <aside>
+                <author>@Model.Author</author>
+                <div class="rating">
+                    @for (int i = 0; i < 5; i++)
+                    {
+                        if(Model.Rating >= i)
+                        {
+                            
+                            <i class="bi bi-star-fill text-warning"></i>
+                        } else
+                        {
+                    <i class="bi bi-star-fill"></i>
+                            
+                        }
+                    }
+                </div>
+                <div class="text-secondary">
+                    <div>@Model.CurrentPrice</div>
+                    <s>@Model.FullPrice</s>
+                </div>
+                <img src="@Model.ImagePath" width="50"/>
+            </aside>
+        </div>
+    </div>
+</section>
+
+<section class="course-lessons">
+    <h2>Lezioni</h2>
+    <div class="list-group">
+
+        @foreach (LessonViewModel lesson in Model.Lessons)
+    {
+        <div class="row list-group-item d-flex">
+            <div class="col-md-9 d-flex align-items-center">
+                <a>@lesson.Title</a>
+            </div>
+            <div class="col-md-3 d-flex align-items-center">
+                <i class="bi bi-clock me-2"></i>
+                <time>@lesson.Duration.ToString("m'm 's's '")</time>
+            </div>
+        </div>
+    }
+   <div class="row list-group-item d-flex">
+       <div class="col-md-9">
+                <strong>Totale</strong>
+       </div>
+       <div class="col-md-3">
+            <i class="bi bi-clock me-2"></i>
+           <time>@Model.TotalDuration.ToString("m'm 's's '")</time>
+       </div>
+   </div>
+    </div>
+</section>
+
