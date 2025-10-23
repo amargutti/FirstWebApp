@@ -5,14 +5,14 @@ namespace FirstWebApp.Models.Services.Infrastructure
 {
     public class SqlServerAccessor : IDatabaseAccessor
     {
-        public DataSet Query(string query)
+        public async Task<DataSet> QueryAsync(string query)
         {
             using (var conn = new SqlConnection("Data Source=(LocalDb)\\FirstWebApp;Database=FirstWebAppDB;Trusted_Connection=True;"))
             {
-                conn.Open();
+                await conn.OpenAsync();
                 using (var cmd = new SqlCommand(query, conn))
                 {
-                    using (var reader = cmd.ExecuteReader())
+                    using (var reader = await cmd.ExecuteReaderAsync())
                     {
                         //mentro leggo i dati creo un DataSet
                         var dataSet = new DataSet();

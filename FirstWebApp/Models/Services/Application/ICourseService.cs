@@ -4,7 +4,7 @@ namespace FirstWebApp.Models.Services.Application
 {
     public interface ICourseService
     {
-        List<CourseViewModel>GetCourses();
-        CourseDetailViewModel GetCourse(string id);
+        Task<List<CourseViewModel>>GetCoursesAsync();
+        Task<CourseDetailViewModel> GetCourseAsync(string id);
     }
 }
