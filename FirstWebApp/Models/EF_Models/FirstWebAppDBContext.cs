@@ -28,6 +28,7 @@ public partial class FirstWebAppDBContext : DbContext
             entity.HasKey(course => new { course.Id, course.Title });
             */
 
+            //Mapping for Owned Types
             entity.OwnsOne(course => course.CurrentPrice, builder =>
             {
                 builder.Property(money => money.Currency).HasConversion<string>(); //converte da stringa ad Enum;
@@ -41,6 +42,11 @@ public partial class FirstWebAppDBContext : DbContext
             {
                 builder.Property(money => money.Currency).HasConversion<string>(); //converte da stringa ad Enum;
             });
+
+            //Mapping for Relations
+            entity.HasMany(course => course.Lessons) //punto di vista dell'attuale entità
+                  .WithOne(lesson => lesson.Course) //punto di vista entità dipendente
+                  .HasForeignKey(lesson => lesson.CourseId); //superflua se la proprietà si chiama CourseId
 
 
             #region Auto Generated Mapping from EF Core Reverse Engineering
@@ -91,6 +97,9 @@ public partial class FirstWebAppDBContext : DbContext
 
         modelBuilder.Entity<Lesson>(entity =>
         {
+            //implementazione dal punto di vista dell'entità dipendente
+            entity.HasOne(lesson => lesson.Course)
+                  .WithMany(course => course.Lessons);
             #region Auto Generated Mapping from EF Core Reverse Engineering
             /*
             entity.Property(e => e.Description)
