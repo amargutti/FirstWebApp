@@ -21,72 +21,86 @@ public partial class FirstWebAppDBContext : DbContext
     {
         modelBuilder.Entity<Course>(entity =>
         {
+            entity.ToTable("Courses");
+            entity.HasKey(course => course.Id); //superfluo se si chiama Id oppure CourseId
+            //nel caso di chiave primare formate da combinazione di più colonne usare questa sintassi:
+            //entity.HasKey(course => new { course.Id, course.Title });
+
+            #region Mapping of EF Reverse Engenireing
+            /*
             entity.HasNoKey();
 
             entity.Property(e => e.Author)
-                .IsRequired()
-                .HasMaxLength(100)
-                .IsUnicode(false);
+            .IsRequired()
+            .HasMaxLength(100)
+            .IsUnicode(false);
             entity.Property(e => e.CurrentPriceAmount)
-                .HasAnnotation("Relational:DefaultConstraintName", "DF_Courses_CurrentPrice_Amount")
-                .HasColumnType("numeric(18, 5)")
-                .HasColumnName("CurrentPrice_Amount");
+            .HasAnnotation("Relational:DefaultConstraintName", "DF_Courses_CurrentPrice_Amount")
+            .HasColumnType("numeric(18, 5)")
+            .HasColumnName("CurrentPrice_Amount");
             entity.Property(e => e.CurrentPriceCurrency)
-                .IsRequired()
-                .HasMaxLength(3)
-                .IsUnicode(false)
-                .HasDefaultValue("EUR")
-                .HasAnnotation("Relational:DefaultConstraintName", "DF_Courses_CurrentPrice_Currency")
-                .HasColumnName("CurrentPrice_Currency");
+            .IsRequired()
+            .HasMaxLength(3)
+            .IsUnicode(false)
+            .HasDefaultValue("EUR")
+            .HasAnnotation("Relational:DefaultConstraintName", "DF_Courses_CurrentPrice_Currency")
+            .HasColumnName("CurrentPrice_Currency");
             entity.Property(e => e.Description)
-                .HasMaxLength(4000)
-                .IsUnicode(false);
+            .HasMaxLength(4000)
+            .IsUnicode(false);
             entity.Property(e => e.Email)
-                .HasMaxLength(100)
-                .IsUnicode(false);
+            .HasMaxLength(100)
+            .IsUnicode(false);
             entity.Property(e => e.FullPriceAmount)
-                .HasAnnotation("Relational:DefaultConstraintName", "DF_Courses_FullPrice_Amount")
-                .HasColumnType("numeric(18, 5)")
-                .HasColumnName("FullPrice_Amount");
+            .HasAnnotation("Relational:DefaultConstraintName", "DF_Courses_FullPrice_Amount")
+            .HasColumnType("numeric(18, 5)")
+            .HasColumnName("FullPrice_Amount");
             entity.Property(e => e.FullPriceCurrency)
-                .IsRequired()
-                .HasMaxLength(3)
-                .IsUnicode(false)
-                .HasDefaultValue("EUR")
-                .HasAnnotation("Relational:DefaultConstraintName", "DF_Courses_FullPrice_Currency")
-                .HasColumnName("FullPrice_Currency");
+            .IsRequired()
+            .HasMaxLength(3)
+            .IsUnicode(false)
+            .HasDefaultValue("EUR")
+            .HasAnnotation("Relational:DefaultConstraintName", "DF_Courses_FullPrice_Currency")
+            .HasColumnName("FullPrice_Currency");
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.ImagePath)
-                .HasMaxLength(100)
-                .IsUnicode(false);
+            .HasMaxLength(100)
+            .IsUnicode(false);
             entity.Property(e => e.Rating).HasAnnotation("Relational:DefaultConstraintName", "DF_Courses_Rating");
             entity.Property(e => e.Title)
-                .IsRequired()
-                .HasMaxLength(100)
-                .IsUnicode(false);
+            .IsRequired()
+            .HasMaxLength(100)
+            .IsUnicode(false);
+            */
+            #endregion
         });
 
         modelBuilder.Entity<Lesson>(entity =>
         {
+            #region Mappign of EF Core Reverse Engenireing
+            /*
             entity.HasNoKey();
 
-            entity.Property(e => e.Description)
-                .HasMaxLength(1000)
-                .IsUnicode(false);
-            entity.Property(e => e.Duration)
-                .HasMaxLength(8)
-                .IsUnicode(false)
-                .HasDefaultValue("00:00:00")
-                .HasAnnotation("Relational:DefaultConstraintName", "DF_Lesson_Duration");
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
-            entity.Property(e => e.Title)
-                .IsRequired()
-                .HasMaxLength(50)
-                .IsUnicode(false);
+        entity.Property(e => e.Description)
+            .HasMaxLength(1000)
+            .IsUnicode(false);
+        entity.Property(e => e.Duration)
+            .HasMaxLength(8)
+            .IsUnicode(false)
+            .HasDefaultValue("00:00:00")
+            .HasAnnotation("Relational:DefaultConstraintName", "DF_Lesson_Duration");
+        entity.Property(e => e.Id).ValueGeneratedOnAdd();
+        entity.Property(e => e.Title)
+            .IsRequired()
+            .HasMaxLength(50)
+            .IsUnicode(false);
+             */
+            #endregion
         });
 
-        OnModelCreatingPartial(modelBuilder);
-    }
+OnModelCreatingPartial(modelBuilder);
+}
 
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
 }

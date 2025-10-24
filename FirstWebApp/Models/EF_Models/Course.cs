@@ -7,7 +7,7 @@ namespace FirstWebApp.Models.EF_Models;
 
 public partial class Course
 {
-    public int Id { get; set; }
+     public int Id { get; set; }
 
     public string Title { get; set; }
 
