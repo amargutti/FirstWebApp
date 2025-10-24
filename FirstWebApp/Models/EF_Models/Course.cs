@@ -7,7 +7,7 @@ namespace FirstWebApp.Models.EF_Models;
 
 public partial class Course
 {
-     public int Id { get; set; }
+    public int Id { get; set; }
 
     public string Title { get; set; }
 
@@ -28,4 +28,6 @@ public partial class Course
     public decimal CurrentPriceAmount { get; set; }
 
     public string CurrentPriceCurrency { get; set; }
+
+    public virtual ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
 }
