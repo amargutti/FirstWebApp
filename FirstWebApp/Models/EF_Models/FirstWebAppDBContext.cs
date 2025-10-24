@@ -21,6 +21,28 @@ public partial class FirstWebAppDBContext : DbContext
     {
         modelBuilder.Entity<Course>(entity =>
         {
+            entity.ToTable("Courses");
+            entity.HasKey(course => course.Id); //omettibile se la chiave è chiamata Id o CourseId
+            /*
+            come scrivere la chiave primaria se questa è composta da più campi
+            entity.HasKey(course => new { course.Id, course.Title });
+            */
+
+            entity.OwnsOne(course => course.CurrentPrice, builder =>
+            {
+                builder.Property(money => money.Currency).HasConversion<string>(); //converte da stringa ad Enum;
+                builder.Property(money => money.Currency).HasColumnName("CurrentPrice_Currency"); //righe inutili perchè nel nostro caso hanno lo stesso nome
+                builder.Property(money => money.Amount).HasColumnName("CurrentPrice_Amount");
+            });
+            //CurrentPrice_Amount -- CurrentPrice_Currency
+            
+            // Questo se le colonne e le proprietà hanno lo stesso nome 
+            entity.OwnsOne(course => course.FullPrice, builder =>
+            {
+                builder.Property(money => money.Currency).HasConversion<string>(); //converte da stringa ad Enum;
+            });
+
+
             #region Auto Generated Mapping from EF Core Reverse Engineering
             /*
             entity.Property(e => e.Author)
