@@ -1,5 +1,7 @@
-﻿using FirstWebApp.Models.Services.Infrastructure;
+﻿using FirstWebApp.Models.Options;
+using FirstWebApp.Models.Services.Infrastructure;
 using FirstWebApp.Models.ViewModels;
+using Microsoft.Extensions.Options;
 using System.Data;
 
 namespace FirstWebApp.Models.Services.Application
@@ -7,9 +9,11 @@ namespace FirstWebApp.Models.Services.Application
     public class AdoNetCourseService : ICourseService
     {
         private readonly IDatabaseAccessor db;
-        public AdoNetCourseService(IDatabaseAccessor db)
+        private readonly IOptionsMonitor<CoursesOptions> courseOptions;
+        public AdoNetCourseService(IDatabaseAccessor db, IOptionsMonitor<CoursesOptions> courseOptions)
         {
             this.db = db;
+            this.courseOptions = courseOptions;
         }
 
         public async Task<List<CourseViewModel>> GetCoursesAsync()
