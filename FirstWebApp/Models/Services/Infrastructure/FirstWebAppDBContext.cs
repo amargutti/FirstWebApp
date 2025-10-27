@@ -21,7 +21,6 @@ public partial class FirstWebAppDBContext : DbContext
         }
     }
 
-
     public virtual DbSet<Course> Courses { get; set; }
 
     public virtual DbSet<Lesson> Lessons { get; set; }
