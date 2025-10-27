@@ -13,6 +13,15 @@ public partial class FirstWebAppDBContext : DbContext
     {
     }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseSqlServer("Data Source=(LocalDb)\\FirstWebApp;Database=FirstWebAppDB;Trusted_Connection=True;");
+        }
+    }
+
+
     public virtual DbSet<Course> Courses { get; set; }
 
     public virtual DbSet<Lesson> Lessons { get; set; }

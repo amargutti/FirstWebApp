@@ -1,11 +1,15 @@
+using FirstWebApp.Models.EF_Models;
 using FirstWebApp.Models.Services.Application;
 using FirstWebApp.Models.Services.Infrastructure;
 
 // Add CourseService to the DI container
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddTransient<ICourseService, AdoNetCourseService>();
+//builder.Services.AddTransient<ICourseService, AdoNetCourseService>();
+builder.Services.AddTransient<ICourseService, EfCoreCourseService>();
 builder.Services.AddTransient<IDatabaseAccessor, SqlServerAccessor>();
+
+builder.Services.AddDbContext<FirstWebAppDBContext>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();

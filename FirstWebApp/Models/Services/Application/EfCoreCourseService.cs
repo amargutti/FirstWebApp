@@ -1,5 +1,6 @@
 ﻿using FirstWebApp.Models.EF_Models;
 using FirstWebApp.Models.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace FirstWebApp.Models.Services.Application
 {
@@ -15,9 +16,22 @@ namespace FirstWebApp.Models.Services.Application
             throw new NotImplementedException();
         }
 
-        public Task<List<CourseViewModel>> GetCoursesAsync()
+        public async Task<List<CourseViewModel>> GetCoursesAsync()
         {
-            throw new NotImplementedException();
+            var courses =  dBContext.Courses.Select(course => new CourseViewModel
+            {
+                Id = course.Id,
+                Title = course.Title,
+                Author  = course.Author,
+                Rating = course.Rating,
+                CurrentPrice = course.CurrentPrice,
+                FullPrice = course.FullPrice,
+                ImagePath = course.ImagePath,
+            }).AsNoTracking();
+
+
+            var sql = courses.ToQueryString(); //durante il debugging visualizzi la Query in SQL Vanilla
+            return await courses.ToListAsync();
         }
     }
 }
