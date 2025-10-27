@@ -4,8 +4,13 @@ namespace FirstWebApp.Models.ViewModels
 {
     public class LessonViewModel
     {
+        public int Id { get; set; }
         public string Title { get; set; }
-        public TimeSpan Duration { get; set; }
+        public string DurationString { get; set; }
+        public TimeSpan Duration { get {
+                return DurationString != null ? TimeSpan.Parse(DurationString) : TimeSpan.Zero;
+            } }
+        public string Description { get; set; }
 
         public static LessonViewModel FromDataRow(DataRow lessonRow)
         {
@@ -13,7 +18,6 @@ namespace FirstWebApp.Models.ViewModels
             var lessonViewModel = new LessonViewModel
             {
                 Title = Convert.ToString(lessonRow["Title"]),
-                Duration = durationString != null ? TimeSpan.Parse(durationString) : TimeSpan.Zero
             };
             return lessonViewModel;
         }

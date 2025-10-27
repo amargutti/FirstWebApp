@@ -1,6 +1,7 @@
 using FirstWebApp.Models.EF_Models;
 using FirstWebApp.Models.Services.Application;
 using FirstWebApp.Models.Services.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 // Add CourseService to the DI container
 
@@ -9,7 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<ICourseService, EfCoreCourseService>();
 builder.Services.AddTransient<IDatabaseAccessor, SqlServerAccessor>();
 
-builder.Services.AddDbContext<FirstWebAppDBContext>();
+builder.Services.AddDbContextPool<FirstWebAppDBContext>(optionsBuilder =>
+        optionsBuilder.UseSqlServer("Data Source=(LocalDb)\\FirstWebApp;Database=FirstWebAppDB;Trusted_Connection=True;")
+);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
