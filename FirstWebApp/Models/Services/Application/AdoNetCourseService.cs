@@ -18,6 +18,7 @@ namespace FirstWebApp.Models.Services.Application
 
         public async Task<List<CourseViewModel>> GetCoursesAsync()
         {
+
             string query = "SELECT Id, Title, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency  FROM Courses";
             DataSet dataSet = await db.QueryAsync(query);
             var dataTable = dataSet.Tables[0];
@@ -32,10 +33,11 @@ namespace FirstWebApp.Models.Services.Application
 
         public async Task<CourseDetailViewModel> GetCourseAsync(string id)
         {
+
             //@ definisce una stringa su + righe
             string query = $@"SELECT Id, Title, Description, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses WHERE Id={id};
             SELECT Id, Title, Description, Duration FROM Lessons WHERE CourseId={id}";
-
+   
             DataSet dataSet = await db.QueryAsync(query);
 
             //Course
