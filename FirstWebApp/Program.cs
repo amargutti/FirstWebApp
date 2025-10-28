@@ -3,12 +3,26 @@ using FirstWebApp.Models.EF_Models;
 using FirstWebApp.Models.Options;
 using FirstWebApp.Models.Services.Application;
 using FirstWebApp.Models.Services.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
 // Add CourseService to the DI container
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddResponseCaching();
+builder.Services.AddMvc(options =>
+{
+    var homeProfile = new CacheProfile();
+    homeProfile.VaryByQueryKeys = builder.Configuration.GetValue<string[]>("ResponseCache:Home:VarByQuerykeys");
+    homeProfile.Duration = builder.Configuration.GetValue<int>("ResponseCache:Home:Duration");
+    homeProfile.Location = builder.Configuration.GetValue<ResponseCacheLocation>("ResponseCache:Home:Location");
+    //modo più compatto di scrivere quello sopra se i nomi dei campi corrispondono
+    //builder.Configuration.Bind("ResponseCache:Home", homeProfile);
+    options.CacheProfiles.Add("Home", homeProfile);
+});
+
 builder.Services.AddTransient<ICourseService, AdoNetCourseService>();
 //builder.Services.AddTransient<ICourseService, EfCoreCourseService>();
 builder.Services.AddTransient<ICachedCourseService, MemoryCachedCourseService>();
@@ -43,6 +57,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 // Middleware to serve static files that are in the wwwroot folder
 app.UseStaticFiles();
+
+app.UseResponseCaching();
 
 app.UseRouting();
 
