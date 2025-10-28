@@ -1,6 +1,8 @@
-﻿using FirstWebApp.Models.Options;
+﻿using FirstWebApp.Models.Exceptions;
+using FirstWebApp.Models.Options;
 using FirstWebApp.Models.Services.Infrastructure;
 using FirstWebApp.Models.ViewModels;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Data;
 
@@ -8,10 +10,13 @@ namespace FirstWebApp.Models.Services.Application
 {
     public class AdoNetCourseService : ICourseService
     {
+        private readonly ILogger<AdoNetCourseService> logger;
         private readonly IDatabaseAccessor db;
         private readonly IOptionsMonitor<CoursesOptions> courseOptions;
-        public AdoNetCourseService(IDatabaseAccessor db, IOptionsMonitor<CoursesOptions> courseOptions)
+
+        public AdoNetCourseService(ILogger<AdoNetCourseService> logger, IDatabaseAccessor db, IOptionsMonitor<CoursesOptions> courseOptions)
         {
+            this.logger = logger;
             this.db = db;
             this.courseOptions = courseOptions;
         }
@@ -33,6 +38,7 @@ namespace FirstWebApp.Models.Services.Application
 
         public async Task<CourseDetailViewModel> GetCourseAsync(string id)
         {
+            logger.LogInformation("Course {id} requested", id); //logging strutturato != interpolazione di stringhe
 
             //@ definisce una stringa su + righe
             string query = $@"SELECT Id, Title, Description, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses WHERE Id={id};
@@ -44,7 +50,8 @@ namespace FirstWebApp.Models.Services.Application
             var courseTable = dataSet.Tables[0];
             if(courseTable.Rows.Count != 1)
             {
-                throw new InvalidOperationException($"Did not return exactly 1 row of Course {id}");
+                logger.LogWarning("Course {id} not found!", id );
+                throw new CourseNotFoundException(id);
             }
 
             var courseRow = courseTable.Rows[0];

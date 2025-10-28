@@ -17,7 +17,7 @@ namespace FirstWebApp.Controllers
         }
 
         private readonly ICourseService courseService;
-        public CoursesController(ICourseService courseService)
+        public CoursesController(ICachedCourseService courseService)
         {
             this.courseService = courseService;
         }

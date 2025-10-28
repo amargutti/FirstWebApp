@@ -1,22 +1,18 @@
 ﻿using FirstWebApp.Models.EF_Models;
 using FirstWebApp.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace FirstWebApp.Models.Services.Application
 {
     public class EfCoreCourseService : ICourseService
     {
-        private readonly ILogger<EfCoreCourseService> logger;
         private readonly FirstWebAppDBContext dBContext;
-        public EfCoreCourseService(ILogger<EfCoreCourseService> logger, FirstWebAppDBContext dBContext) {
-            this.logger = logger;
+        public EfCoreCourseService(FirstWebAppDBContext dBContext) {
             this.dBContext = dBContext;
         }
 
         public async Task<CourseDetailViewModel> GetCourseAsync(string id)
         {
-            logger.LogInformation("Course {id} requested", id); //logging strutturato != interpolazione di stringhe
 
             int numId = Convert.ToInt32(id);
             var course = dBContext.Courses.Where(course => course.Id == numId)
