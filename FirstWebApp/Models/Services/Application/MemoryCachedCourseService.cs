@@ -14,10 +14,13 @@ namespace FirstWebApp.Models.Services.Application
             this.memoryCache = memoryCache;
         }
 
+        //TODO: ricordati di usare memoryCache.Remove($"Course {id}") quando aggiorni i campi del corso
+
         public Task<CourseDetailViewModel> GetCourseAsync(string id)
         {
             return memoryCache.GetOrCreateAsync($"Course {id}", cacheEntry =>
             {
+                cacheEntry.SetSize(1);
                 cacheEntry.SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
                 return courseService.GetCourseAsync(id);
             });
@@ -27,6 +30,7 @@ namespace FirstWebApp.Models.Services.Application
         {
             return memoryCache.GetOrCreate($"Courses", cacheEntry =>
             {
+                cacheEntry.SetSize(1);
                 cacheEntry.SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
                 return courseService.GetCoursesAsync();
             });

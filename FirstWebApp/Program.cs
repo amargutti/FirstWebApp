@@ -4,6 +4,7 @@ using FirstWebApp.Models.Options;
 using FirstWebApp.Models.Services.Application;
 using FirstWebApp.Models.Services.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 // Add CourseService to the DI container
 
@@ -21,6 +22,7 @@ builder.Services.AddDbContextPool<FirstWebAppDBContext>(optionsBuilder =>
 //Options
 builder.Services.Configure<ConnectionStringsOptions>(builder.Configuration.GetSection("ConnectionStrings"));
 builder.Services.Configure<CoursesOptions>(builder.Configuration.GetSection("Courses"));
+builder.Services.Configure<MemoryCacheOptions>(builder.Configuration.GetSection("MemoryCache"));
 
 // Add services to the container.
 builder.Services.AddRazorPages();
