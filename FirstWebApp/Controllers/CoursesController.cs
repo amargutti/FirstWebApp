@@ -24,8 +24,8 @@ namespace FirstWebApp.Controllers
 
         public async Task<IActionResult> Index(string search, int page, string orderby, bool ascending)
         {
-            List<CourseViewModel> courses = await courseService.GetCoursesAsync();
             ViewData["Title"] = "Elenco Corsi";
+            List<CourseViewModel> courses = await courseService.GetCoursesAsync(search, page, orderby, ascending);
             return View(courses); // volendo si potrebbe specificare il percorso della view come stringa anche con nome diverso dalla action
         }
 

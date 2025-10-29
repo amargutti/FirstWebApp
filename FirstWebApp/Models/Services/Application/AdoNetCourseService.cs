@@ -1,6 +1,7 @@
 ﻿using FirstWebApp.Models.Exceptions;
 using FirstWebApp.Models.Options;
 using FirstWebApp.Models.Services.Infrastructure;
+using FirstWebApp.Models.ValueTypes;
 using FirstWebApp.Models.ViewModels;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -21,16 +22,40 @@ namespace FirstWebApp.Models.Services.Application
             this.courseOptions = courseOptions;
         }
 
-        public async Task<List<CourseViewModel>> GetCoursesAsync()
+        public async Task<List<CourseViewModel>> GetCoursesAsync(string search, int page, string orderby, bool ascending)
         {
+            search = search ?? "";
+            page = Math.Max(1, page);
+            int limit = 10;
+            int offset = (page - 1) * limit;
+            var orderOptions = courseOptions.CurrentValue.Order;
+            if (!orderOptions.Allow.Contains(orderby))
+            {
+                orderby = orderOptions.By;
+                ascending = orderOptions.Ascending;
+            }
 
-            string query = "SELECT Id, Title, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency  FROM Courses";
+            if (orderby == "CurrentPrice")
+            {
+                orderby = "CurrentPrice_Amount";
+            }
+
+            //WHERE Title LIKE '{"%" + search + "%"}' 
+            string direction = ascending ? "ASC" : "DESC";
+            FormattableString query = @$"SELECT Id, Title, ImagePath, Author, Rating, FullPrice_Amount, 
+            FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency 
+            FROM Courses 
+            WHERE Title LIKE '{"%" + search + "%"}' 
+            ORDER BY {(Sql )orderby} { (Sql) direction} 
+            OFFSET {offset} ROWS
+            FETCH NEXT {limit} 
+            ROWS ONLY"; //i % per vedere se la singola parola è compresa nel titolo
             DataSet dataSet = await db.QueryAsync(query);
             var dataTable = dataSet.Tables[0];
             var courseList = new List<CourseViewModel>();
-            foreach(DataRow courseRow in dataTable.Rows)
+            foreach (DataRow courseRow in dataTable.Rows)
             {
-               CourseViewModel course =CourseViewModel.FromDataRow(courseRow);
+                CourseViewModel course = CourseViewModel.FromDataRow(courseRow);
                 courseList.Add(course);
             }
             return courseList;
@@ -41,16 +66,16 @@ namespace FirstWebApp.Models.Services.Application
             logger.LogInformation("Course {id} requested", id); //logging strutturato != interpolazione di stringhe
 
             //@ definisce una stringa su + righe
-            string query = $@"SELECT Id, Title, Description, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses WHERE Id={id};
+            FormattableString query = $@"SELECT Id, Title, Description, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses WHERE Id={id};
             SELECT Id, Title, Description, Duration FROM Lessons WHERE CourseId={id}";
-   
+
             DataSet dataSet = await db.QueryAsync(query);
 
             //Course
             var courseTable = dataSet.Tables[0];
-            if(courseTable.Rows.Count != 1)
+            if (courseTable.Rows.Count != 1)
             {
-                logger.LogWarning("Course {id} not found!", id );
+                logger.LogWarning("Course {id} not found!", id);
                 throw new CourseNotFoundException(id);
             }
 
@@ -60,13 +85,13 @@ namespace FirstWebApp.Models.Services.Application
             //Course Lesson
 
             var lessonDataTable = dataSet.Tables[1];
-            foreach(DataRow lessonRow in lessonDataTable.Rows)
+            foreach (DataRow lessonRow in lessonDataTable.Rows)
             {
                 LessonViewModel lessonViewModel = LessonViewModel.FromDataRow(lessonRow);
                 courseDetailViewModel.Lessons.Add(lessonViewModel);
             }
 
-            return courseDetailViewModel; 
+            return courseDetailViewModel;
         }
     }
 }

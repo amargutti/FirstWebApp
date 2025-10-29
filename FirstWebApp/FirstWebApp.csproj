@@ -8,6 +8,7 @@
 
   <ItemGroup>
 	  <Compile Remove="Models/Services/Application/CourseService.cs" />
+	  <Compile Remove="Models/Services/Application/DistributedCacheCourseService.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -25,7 +25,7 @@ namespace FirstWebApp.Models.ViewModels
                 Title = "" + courseRow["Title"],
                 Description = Convert.ToString(courseRow["Description"]),
                 Author = (string)courseRow["Author"],
-                ImagePath = (string)courseRow["ImagePath"],
+                //ImagePath = (string)courseRow["ImagePath"],
                 Rating = Convert.ToDouble(courseRow["Rating"]),
                 FullPrice = new Money(
                     Enum.Parse<Currency>(Convert.ToString(courseRow["FullPrice_Currency"])),

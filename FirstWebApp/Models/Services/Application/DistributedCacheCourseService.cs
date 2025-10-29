@@ -24,7 +24,7 @@ namespace FirstWebApp.Models.Services.Application
             throw new NotImplementedException();
         }
 
-        public async Task<List<CourseViewModel>> GetCoursesAsync()
+        public async Task<List<CourseViewModel>> GetCoursesAsync(string search)
         {
             string key = $"Courses";
             string serializedObject = await distributedCache.GetStringAsync(key);

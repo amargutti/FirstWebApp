@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using FirstWebApp.Models.Options;
+using FirstWebApp.Models.ValueTypes;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
 
@@ -15,13 +16,31 @@ namespace FirstWebApp.Models.Services.Infrastructure
             this.connectionStringsOptions = connectionStringsOptions;
         } 
 
-        public async Task<DataSet> QueryAsync(string query)
+        public async Task<DataSet> QueryAsync(FormattableString formattableQuery)
         {
+            var queryArguments = formattableQuery.GetArguments();
+            var sqlserverParameters = new List<SqlParameter>();
+            for (var i = 0; i < queryArguments.Length; i++)
+            {
+                if (queryArguments[i] is Sql)
+                {
+                    continue;
+                }
+
+                var parameter = new SqlParameter(i.ToString(), queryArguments[i]);
+                 sqlserverParameters.Add(parameter);
+                //queryArguments[i] = i;
+            }
+            string query = formattableQuery.ToString();
+
+
             using (var conn = new SqlConnection(connectionStringsOptions.CurrentValue.Default))
             {
                 await conn.OpenAsync();
                 using (var cmd = new SqlCommand(query, conn))
                 {
+                    cmd.Parameters.AddRange(sqlserverParameters.ToArray());
+
                     using (var reader = await cmd.ExecuteReaderAsync())
                     {
                         //mentro leggo i dati creo un DataSet

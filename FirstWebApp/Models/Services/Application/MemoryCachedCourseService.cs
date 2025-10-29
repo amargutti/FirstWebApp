@@ -26,13 +26,13 @@ namespace FirstWebApp.Models.Services.Application
             });
         }
 
-        public Task<List<CourseViewModel>> GetCoursesAsync()
+        public Task<List<CourseViewModel>> GetCoursesAsync(string search, int page, string orderby, bool ascending)
         {
-            return memoryCache.GetOrCreate($"Courses", cacheEntry =>
+            return memoryCache.GetOrCreate($"Courses{search}-{page}-{orderby}-{ascending}", cacheEntry =>
             {
                 cacheEntry.SetSize(1);
                 cacheEntry.SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
-                return courseService.GetCoursesAsync();
+                return courseService.GetCoursesAsync(search, page, orderby, ascending);
             });
         }
     }

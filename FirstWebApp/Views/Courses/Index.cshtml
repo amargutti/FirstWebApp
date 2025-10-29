@@ -16,6 +16,14 @@
     </div>
 </div>
 
+<div class="row my-2">
+    <div class="col-md-1"></div>
+    <div class="col-md-5"><a asp-route-orderby="Title" asp-route-ascending="true">Titolo</a></div>
+    <div class="col-md-2"><a asp-route-orderby="Rating" asp-route-ascending="true">Rating</a></div>
+    <div class="col-md-2"><a asp-route-orderby="CurrentPrice" asp-route-ascending="true">Price</a></div>
+    <div class="col-md-2"></div>
+</div>
+
 <div class="list-group">
     @foreach(CourseViewModel course in Model)
     {
@@ -51,3 +59,17 @@
         </div>
     }
 </div>
+
+<nav aria-label="Paginazione">
+    <ul class="pagination d-flex align-content-center mt-3">
+        <li class="page-item">
+            <a class="page-link" asp-route-page="1">1</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" asp-route-page="2">2</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" asp-route-page="3">3</a>
+        </li>
+    </ul>
+</nav>

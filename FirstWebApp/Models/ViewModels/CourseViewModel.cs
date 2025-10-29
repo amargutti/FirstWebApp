@@ -22,7 +22,7 @@ namespace FirstWebApp.Models.ViewModels
                 //modo più sicuro per convertire in stringa ? cos^ anche se null ti restituisce stringa vuouta
                 Title = "" + courseRow["Title"],
                 Author = (string)courseRow["Author"],
-                ImagePath = (string)courseRow["ImagePath"],
+                //ImagePath = (string)courseRow["ImagePath"],
                 Rating = Convert.ToDouble(courseRow["Rating"]),
                 FullPrice = new Money(
                     Enum.Parse<Currency>(Convert.ToString(courseRow["FullPrice_Currency"])),
