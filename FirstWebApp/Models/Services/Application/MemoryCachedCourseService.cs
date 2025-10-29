@@ -1,4 +1,5 @@
-﻿using FirstWebApp.Models.ViewModels;
+﻿using FirstWebApp.Models.InputModels;
+using FirstWebApp.Models.ViewModels;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace FirstWebApp.Models.Services.Application
@@ -26,13 +27,13 @@ namespace FirstWebApp.Models.Services.Application
             });
         }
 
-        public Task<List<CourseViewModel>> GetCoursesAsync(string search, int page, string orderby, bool ascending)
+        public Task<List<CourseViewModel>> GetCoursesAsync(CourseListInputModel model)
         {
-            return memoryCache.GetOrCreate($"Courses{search}-{page}-{orderby}-{ascending}", cacheEntry =>
+            return memoryCache.GetOrCreate($"Courses{model.Search}-{model.Page}-{model.OrderBy}-{model.Ascending}", cacheEntry =>
             {
                 cacheEntry.SetSize(1);
                 cacheEntry.SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
-                return courseService.GetCoursesAsync(search, page, orderby, ascending);
+                return courseService.GetCoursesAsync(model);
             });
         }
     }

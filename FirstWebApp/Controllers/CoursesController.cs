@@ -1,4 +1,5 @@
-﻿using FirstWebApp.Models.Services.Application;
+﻿using FirstWebApp.Models.InputModels;
+using FirstWebApp.Models.Services.Application;
 using FirstWebApp.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -22,10 +23,10 @@ namespace FirstWebApp.Controllers
             this.courseService = courseService;
         }
 
-        public async Task<IActionResult> Index(string search, int page, string orderby, bool ascending)
+        public async Task<IActionResult> Index(CourseListInputModel model)
         {
             ViewData["Title"] = "Elenco Corsi";
-            List<CourseViewModel> courses = await courseService.GetCoursesAsync(search, page, orderby, ascending);
+            List<CourseViewModel> courses = await courseService.GetCoursesAsync(model);
             return View(courses); // volendo si potrebbe specificare il percorso della view come stringa anche con nome diverso dalla action
         }
 

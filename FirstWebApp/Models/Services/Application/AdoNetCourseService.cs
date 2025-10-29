@@ -1,4 +1,5 @@
 ﻿using FirstWebApp.Models.Exceptions;
+using FirstWebApp.Models.InputModels;
 using FirstWebApp.Models.Options;
 using FirstWebApp.Models.Services.Infrastructure;
 using FirstWebApp.Models.ValueTypes;
@@ -22,33 +23,24 @@ namespace FirstWebApp.Models.Services.Application
             this.courseOptions = courseOptions;
         }
 
-        public async Task<List<CourseViewModel>> GetCoursesAsync(string search, int page, string orderby, bool ascending)
+        public async Task<List<CourseViewModel>> GetCoursesAsync(CourseListInputModel model)
         {
-            search = search ?? "";
-            page = Math.Max(1, page);
-            int limit = 10;
-            int offset = (page - 1) * limit;
-            var orderOptions = courseOptions.CurrentValue.Order;
-            if (!orderOptions.Allow.Contains(orderby))
-            {
-                orderby = orderOptions.By;
-                ascending = orderOptions.Ascending;
-            }
+            //Decidere cosa estrarre dal db
 
-            if (orderby == "CurrentPrice")
+            if (model.OrderBy == "CurrentPrice")
             {
-                orderby = "CurrentPrice_Amount";
+                model.OrderBy = "CurrentPrice_Amount";
             }
 
             //WHERE Title LIKE '{"%" + search + "%"}' 
-            string direction = ascending ? "ASC" : "DESC";
+            string direction = model.Ascending ? "ASC" : "DESC";
             FormattableString query = @$"SELECT Id, Title, ImagePath, Author, Rating, FullPrice_Amount, 
             FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency 
             FROM Courses 
-            WHERE Title LIKE '{"%" + search + "%"}' 
-            ORDER BY {(Sql )orderby} { (Sql) direction} 
-            OFFSET {offset} ROWS
-            FETCH NEXT {limit} 
+            WHERE Title LIKE '{"%" + model.Search + "%"}' 
+            ORDER BY {(Sql )model.OrderBy} { (Sql) direction} 
+            OFFSET {model.Offset} ROWS
+            FETCH NEXT {model.Limit} 
             ROWS ONLY"; //i % per vedere se la singola parola è compresa nel titolo
             DataSet dataSet = await db.QueryAsync(query);
             var dataTable = dataSet.Tables[0];
