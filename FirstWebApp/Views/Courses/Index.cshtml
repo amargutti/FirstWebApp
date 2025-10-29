@@ -1,4 +1,4 @@
-﻿@model List<CourseViewModel>
+﻿@model CourseListViewModel
 
 <div class="row">
     <div class="col-md-8">
@@ -7,7 +7,7 @@
     <div class="col-md-4 d-flex align-items-center">
         <form asp-controller="Courses" asp-action="Index" method="GET"> <!--siccome siamo nella suddetta via possono essere superflui-->
             <div class="input-group">
-                <input type="text" name="search" placeholder="Cerca..." />
+                <input type="text" name="search" placeholder="Cerca..." value="@Model.Input.Search"/>
                 <div class="input-group-append">
                     <button><i class="bi bi-search"></i></button>
                 </div>
@@ -16,16 +16,29 @@
     </div>
 </div>
 
+
 <div class="row my-2">
     <div class="col-md-1"></div>
-    <div class="col-md-5"><a asp-route-orderby="Title" asp-route-ascending="true">Titolo</a></div>
-    <div class="col-md-2"><a asp-route-orderby="Rating" asp-route-ascending="true">Rating</a></div>
-    <div class="col-md-2"><a asp-route-orderby="CurrentPrice" asp-route-ascending="true">Price</a></div>
+    <div class="col-md-5"><a asp-route-orderby="Title" asp-route-ascending="@(Model.Input.OrderBy == "Title" ? !Model.Input.Ascending : true)" asp-route-search="@Model.Input.Search">Titolo @if (Model.Input.OrderBy == "Title")
+            {
+                <i class="bi bi-caret-@(Model.Input.Ascending ? "up" : "down")-fill"></i>
+            }
+        </a></div>
+    <div class="col-md-2"><a asp-route-orderby="Rating" asp-route-ascending="@(Model.Input.OrderBy == "Rating" ? !Model.Input.Ascending : true)" asp-route-search="@Model.Input.Search">Rating @if (Model.Input.OrderBy == "Rating")
+            {
+                <i class="bi bi-caret-@(Model.Input.Ascending ? "up" : "down")-fill"></i>
+            }
+        </a></div>
+    <div class="col-md-2"><a asp-route-orderby="CurrentPrice" asp-route-ascending="@(Model.Input.OrderBy == "CurrentPrice" ? !Model.Input.Ascending : true)" asp-route-search="@Model.Input.Search">Price @if (Model.Input.OrderBy == "CurrentPrice")
+            {
+                <i class="bi bi-caret-@(Model.Input.Ascending ? "up" : "down")-fill"></i>
+            }
+        </a></div>
     <div class="col-md-2"></div>
 </div>
 
 <div class="list-group">
-    @foreach(CourseViewModel course in Model)
+    @foreach(CourseViewModel course in Model.Courses)
     {
         <div class="row list-group-item d-flex align-items-center">
             <div class="col-md-1">

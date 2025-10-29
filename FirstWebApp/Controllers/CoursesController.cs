@@ -27,7 +27,14 @@ namespace FirstWebApp.Controllers
         {
             ViewData["Title"] = "Elenco Corsi";
             List<CourseViewModel> courses = await courseService.GetCoursesAsync(model);
-            return View(courses); // volendo si potrebbe specificare il percorso della view come stringa anche con nome diverso dalla action
+            
+            CourseListViewModel viewModel = new CourseListViewModel
+            {
+                Courses = courses,
+                Input = model
+            };
+            
+            return View(viewModel); // volendo si potrebbe specificare il percorso della view come stringa anche con nome diverso dalla action
         }
 
         public async Task<IActionResult> Details(string id)
