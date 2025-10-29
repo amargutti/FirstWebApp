@@ -30,7 +30,7 @@ namespace FirstWebApp.Models.InputModels
             OrderBy = orderBy;
             Ascending = ascending;
 
-            Limit = (int)coursesOptions.PerPage;
+            Limit = (int) coursesOptions.PerPage;
             Offset = (Page - 1) * Limit;
         }
     }

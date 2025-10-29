@@ -38,7 +38,7 @@ namespace FirstWebApp.Models.Services.Application
             FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency 
             FROM Courses 
             WHERE Title LIKE '{"%" + model.Search + "%"}' 
-            ORDER BY {(Sql )model.OrderBy} { (Sql) direction} 
+            ORDER BY {(Sql) model.OrderBy} { (Sql) direction} 
             OFFSET {model.Offset} ROWS
             FETCH NEXT {model.Limit} 
             ROWS ONLY"; //i % per vedere se la singola parola è compresa nel titolo
