@@ -19,22 +19,10 @@
             <aside>
                 <author>@Model.Author</author>
                 <div class="rating">
-                    @for (int i = 0; i < 5; i++)
-                    {
-                        if(Model.Rating >= i)
-                        {
-                            
-                            <i class="bi bi-star-fill text-warning"></i>
-                        } else
-                        {
-                    <i class="bi bi-star-fill"></i>
-                            
-                        }
-                    }
+                    <rating value="@Model.Rating"></rating>
                 </div>
                 <div class="text-secondary">
-                    <div>@Model.CurrentPrice</div>
-                    <s>@Model.FullPrice</s>
+                   <price current-price="@Model.CurrentPrice" full-price="@Model.FullPrice"></price>
                 </div>
                 <img src="@Model.ImagePath" width="50"/>
             </aside>
