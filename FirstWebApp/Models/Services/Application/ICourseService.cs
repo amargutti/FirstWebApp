@@ -5,7 +5,11 @@ namespace FirstWebApp.Models.Services.Application
 {
     public interface ICourseService
     {
-        Task<List<CourseViewModel>>GetCoursesAsync(CourseListInputModel model);
+        Task<ListViewModel<CourseViewModel>>GetCoursesAsync(CourseListInputModel model);
         Task<CourseDetailViewModel> GetCourseAsync(string id);
+
+        Task<List<CourseViewModel>> GetBestRatingCoursesAsync();
+        Task<List<CourseViewModel>> GetMostRecentCoursesAsync();
+
     }
 }

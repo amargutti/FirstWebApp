@@ -26,7 +26,7 @@ namespace FirstWebApp.Controllers
         public async Task<IActionResult> Index(CourseListInputModel model)
         {
             ViewData["Title"] = "Elenco Corsi";
-            List<CourseViewModel> courses = await courseService.GetCoursesAsync(model);
+            ListViewModel<CourseViewModel> courses = await courseService.GetCoursesAsync(model);
             
             CourseListViewModel viewModel = new CourseListViewModel
             {

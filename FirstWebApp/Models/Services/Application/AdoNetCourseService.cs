@@ -23,14 +23,11 @@ namespace FirstWebApp.Models.Services.Application
             this.courseOptions = courseOptions;
         }
 
-        public async Task<List<CourseViewModel>> GetCoursesAsync(CourseListInputModel model)
+        public async Task<ListViewModel<CourseViewModel>> GetCoursesAsync(CourseListInputModel model)
         {
             //Decidere cosa estrarre dal db
 
-            if (model.OrderBy == "CurrentPrice")
-            {
-                model.OrderBy = "CurrentPrice_Amount";
-            }
+            string orderby = model.OrderBy == "CurrentPrice" ? "CurrentPrice_Amount" : model.OrderBy;
 
             //WHERE Title LIKE '{"%" + search + "%"}' 
             string direction = model.Ascending ? "ASC" : "DESC";
@@ -41,7 +38,9 @@ namespace FirstWebApp.Models.Services.Application
             ORDER BY {(Sql) model.OrderBy} { (Sql) direction} 
             OFFSET {model.Offset} ROWS
             FETCH NEXT {model.Limit} 
-            ROWS ONLY"; //i % per vedere se la singola parola è compresa nel titolo
+            ROWS ONLY;
+            SELECT COUNT (*) FROM Courses
+            WHERE Title LIKE '{"%" + model.Search + "%"}'"; //i % per vedere se la singola parola è compresa nel titolo
             DataSet dataSet = await db.QueryAsync(query);
             var dataTable = dataSet.Tables[0];
             var courseList = new List<CourseViewModel>();
@@ -50,7 +49,14 @@ namespace FirstWebApp.Models.Services.Application
                 CourseViewModel course = CourseViewModel.FromDataRow(courseRow);
                 courseList.Add(course);
             }
-            return courseList;
+
+            ListViewModel<CourseViewModel> result = new ListViewModel<CourseViewModel>
+            {
+                Results = courseList,
+                TotalCount = Convert.ToInt32(dataSet.Tables[1].Rows[0][0])
+            };
+
+            return result;
         }
 
         public async Task<CourseDetailViewModel> GetCourseAsync(string id)
@@ -84,6 +90,35 @@ namespace FirstWebApp.Models.Services.Application
             }
 
             return courseDetailViewModel;
+        }
+
+        public async Task<List<CourseViewModel>> GetMostRecentCoursesAsync()
+        {
+            CourseListInputModel inputmodel = new CourseListInputModel(
+                search: "",
+                page: 1,
+                orderby: "id",
+                ascending: false,
+                limit: courseOptions.CurrentValue.InHome,
+                orderOptions: courseOptions.CurrentValue.Order);
+
+            ListViewModel<CourseViewModel> result = await GetCoursesAsync(inputmodel);
+            return result.Results;
+        }
+
+        public async Task<List<CourseViewModel>> GetBestRatingCoursesAsync()
+        {
+            CourseListInputModel inputModel = new CourseListInputModel(
+                search: "",
+                page: 1,
+                orderby: "Rating",
+                ascending: true,
+                limit: courseOptions.CurrentValue.InHome,
+                orderOptions: courseOptions.CurrentValue.Order);
+
+            ListViewModel<CourseViewModel> result = await GetCoursesAsync(inputModel);
+
+            return result.Results;
         }
     }
 }

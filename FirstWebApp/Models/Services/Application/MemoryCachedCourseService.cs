@@ -15,6 +15,16 @@ namespace FirstWebApp.Models.Services.Application
             this.memoryCache = memoryCache;
         }
 
+        public Task<List<CourseViewModel>> GetBestRatingCoursesAsync()
+        {
+            return memoryCache.GetOrCreateAsync($"BestRatingCourses", cacheEntry =>
+            {
+                cacheEntry.SetSize(1);
+                cacheEntry.SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
+                return courseService.GetBestRatingCoursesAsync();
+            });
+        }
+
         //TODO: ricordati di usare memoryCache.Remove($"Course {id}") quando aggiorni i campi del corso
 
         public Task<CourseDetailViewModel> GetCourseAsync(string id)
@@ -27,13 +37,24 @@ namespace FirstWebApp.Models.Services.Application
             });
         }
 
-        public Task<List<CourseViewModel>> GetCoursesAsync(CourseListInputModel model)
+        public Task<ListViewModel<CourseViewModel>> GetCoursesAsync(CourseListInputModel model)
         {
             return memoryCache.GetOrCreate($"Courses{model.Search}-{model.Page}-{model.OrderBy}-{model.Ascending}", cacheEntry =>
             {
                 cacheEntry.SetSize(1);
                 cacheEntry.SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
                 return courseService.GetCoursesAsync(model);
+            });
+        }
+
+        public Task<List<CourseViewModel>> GetMostRecentCoursesAsync()
+        {
+            return memoryCache.GetOrCreateAsync($"MostRecentCourses", cacheEntry =>
+            {
+                cacheEntry.SetSize(1);
+
+                cacheEntry.SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
+                return courseService.GetMostRecentCoursesAsync();
             });
         }
     }

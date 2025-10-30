@@ -13,23 +13,22 @@ namespace FirstWebApp.Customizations.ModelBinder
      */
     public class CourseListInputModelBinder : IModelBinder
     {
-        private IOptionsMonitor<CoursesOptions> courseOptions;
-
-        public CourseListInputModelBinder (IOptionsMonitor<CoursesOptions> courseOptions)
+        private readonly IOptionsMonitor<CoursesOptions> coursesOptions;
+        public CourseListInputModelBinder(IOptionsMonitor<CoursesOptions> coursesOptions)
         {
-            this.courseOptions = courseOptions;
+            this.coursesOptions = coursesOptions;
         }
-
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
-            //recuperiamo i valori grazie ai value binder
+            //Recuperiamo i valori grazie ai value provider
             string search = bindingContext.ValueProvider.GetValue("Search").FirstValue;
-            int page = Convert.ToInt32(bindingContext.ValueProvider.GetValue("Page").FirstValue);
             string orderBy = bindingContext.ValueProvider.GetValue("OrderBy").FirstValue;
-            bool ascending = Convert.ToBoolean(bindingContext.ValueProvider.GetValue("Ascending").FirstValue);
+            int.TryParse(bindingContext.ValueProvider.GetValue("Page").FirstValue, out int page);
+            bool.TryParse(bindingContext.ValueProvider.GetValue("Ascending").FirstValue, out bool ascending);
 
             //Creiamo l'istanza del CourseListInputModel
-            var inputModel = new CourseListInputModel(search, page, orderBy, ascending, courseOptions.CurrentValue);
+            CoursesOptions options = coursesOptions.CurrentValue;
+            CourseListInputModel inputModel = new(search, page, orderBy, ascending, (int) options.PerPage, options.Order);
 
             //Impostiamo il risultato per notificare che la creazione è avvenuta con successo
             bindingContext.Result = ModelBindingResult.Success(inputModel);
