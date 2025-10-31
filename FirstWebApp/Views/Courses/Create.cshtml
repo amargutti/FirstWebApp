@@ -1,0 +1,16 @@
+﻿@model CourseCreateInputModel
+
+<h1>@ViewData["Title"]</h1>
+
+<form method="post">
+    <div class="row">
+        <div class="col-md-8">
+            <!--L'attributo "asp-for" si valorizza con una proprietà del model e serve solo ad aggiungere gli attributi name e id-->
+            <input type="text" asp-for="Title" class="form-control form-control-lg" placeholder="Inserci un titolo..."/>
+            <!--Il reale vantaggio di usarlo è quello che previene gli errori di digitazione (segnalati in fase di compilazione)-->
+        </div>
+        <div class="col-md-4">
+            <button type="submit" class="btn btn-primary btn-lg btn-block d-flex align-items-center gap-2"><i class="bi bi-send-fill"></i>Invia</button>
+        </div>
+    </div>
+</form>
