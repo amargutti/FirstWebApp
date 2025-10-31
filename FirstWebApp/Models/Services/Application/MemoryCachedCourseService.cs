@@ -15,6 +15,11 @@ namespace FirstWebApp.Models.Services.Application
             this.memoryCache = memoryCache;
         }
 
+        public Task<CourseDetailViewModel> CreateCourseAsync(CourseCreateInputModel model)
+        {
+            return courseService.CreateCourseAsync(model);
+        }
+
         public Task<List<CourseViewModel>> GetBestRatingCoursesAsync()
         {
             return memoryCache.GetOrCreateAsync($"BestRatingCourses", cacheEntry =>

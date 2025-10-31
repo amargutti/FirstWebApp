@@ -57,8 +57,9 @@ namespace FirstWebApp.Controllers
         }
 
         [HttpPost] //Toglie l'ambiguità tra le due chiamate in quanto il browser saprà che questa deve essere lanciata solo quando la richiesta è di tipo POST
-        public IActionResult Create(CourseCreateInputModel model) {
+        public async Task<IActionResult> Create(CourseCreateInputModel model) {
             //Coinvolgere un servizio applicativo che si occupi della creazione del corso
+            CourseDetailViewModel course = await courseService.CreateCourseAsync(model);
             return RedirectToAction(nameof(Index));
         }
     }

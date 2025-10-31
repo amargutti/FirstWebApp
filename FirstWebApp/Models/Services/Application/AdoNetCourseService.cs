@@ -120,5 +120,19 @@ namespace FirstWebApp.Models.Services.Application
 
             return result.Results;
         }
+
+        public async Task<CourseDetailViewModel> CreateCourseAsync(CourseCreateInputModel model)
+        {
+            string title = model.Title;
+            string author = "Mario Rossi";
+
+            var dataSet = await db.QueryAsync($@"INSERT INTO Courses (Title, Author, ImagePath, CurrentPrice_Currency, CurrentPrice_Amount, FullPrice_Currency, FullPrice_Amount) 
+                                                VALUES ('{title}', '{author}', 'default', 'EUR', 0, 'EUR', 0);
+                                                SELECT SCOPE_IDENTITY();");
+
+            int courseId = Convert.ToInt32(dataSet.Tables[0].Rows[0][0]);
+            CourseDetailViewModel course = await GetCourseAsync(Convert.ToString(courseId));
+            return course;
+        }
     }
 }

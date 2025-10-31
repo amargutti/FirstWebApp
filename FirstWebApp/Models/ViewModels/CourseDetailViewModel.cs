@@ -1,4 +1,5 @@
 ﻿
+using FirstWebApp.Models.EF_Models;
 using FirstWebApp.Models.Enums;
 using FirstWebApp.Models.ValueTypes;
 using System.Data;
@@ -39,6 +40,9 @@ namespace FirstWebApp.Models.ViewModels
             };
             return courseViewModel;
         }
+
+       
     };
+
 
 }

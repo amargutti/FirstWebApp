@@ -142,5 +142,17 @@ namespace FirstWebApp.Models.Services.Application
             ListViewModel<CourseViewModel> result = await GetCoursesAsync(inputModel);
             return result.Results;
         }
+
+        //public async Task<CourseDetailViewModel> CreateCourseAsync(CourseCreateInputModel model)
+        //{
+        //    string title = model.Title;
+        //    string author = "Mario Rossi";
+        //    var course = new Course(title, author);
+            
+        //    dBContext.Add(course);
+        //    await dBContext.SaveChangesAsync();
+
+        //    return CourseDetailViewModel.FromEntity(course);
+        //}
     }
 }
